@@ -1,20 +1,190 @@
-<html>
-<body style="background-color:#2DB7A0;">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>peldón</title>
+    <style>
+        body {
+            background-color: #13bb88;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+        .carousel-container {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-wrapper img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10;
+        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        
+        /* Confeti */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>peldón mi amor :(</h1>
+    <div class="carousel-container">
+        <button class="prev" onclick="prevSlide()">&#10094;</button>
+        <div class="carousel-wrapper" id="carousel">
+            <img src="1.jpeg" alt="Imagen 1">
+            <img src="2.jpeg" alt="Imagen 2">
+            <img src="3.jpeg" alt="Imagen 3">
+            <img src="4.jpeg" alt="Imagen 4">
+            <img src="5.jpeg" alt="Imagen 5">
+            <img src="6.jpeg" alt="Imagen 6">
+            <img src="7.jpeg" alt="Imagen 7">
+            <img src="8.jpeg" alt="Imagen 8">
+            <img src="9.jpeg" alt="Imagen 9">
+            <img src="10.jpeg" alt="Imagen 10">
+        </div>
+        <button class="next" onclick="nextSlide()">&#10095;</button>
+    </div>
+    
+    <audio id="bg-audio" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <canvas id="confetti"></canvas>
+
+    <script>
+        let index = 0;
+        const images = document.querySelectorAll(".carousel-wrapper img");
+        const totalImages = images.length;
+        
+        function showSlide() {
+            const carousel = document.getElementById("carousel");
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+        }
+        
+        function nextSlide() {
+            index = (index + 1) % totalImages;
+            showSlide();
+            playAudio();
+        }
+        
+        function prevSlide() {
+            index = (index - 1 + totalImages) % totalImages;
+            showSlide();
+            playAudio();
+        }
+        
+        function playAudio() {
+            let audio = document.getElementById("bg-audio");
+            if (audio.paused) {
+                audio.play();
+            }
+        }
+        
+        document.addEventListener("click", function() {
+            playAudio();
+        });
+
+        // Efecto de confeti
+        const canvas = document.getElementById("confetti");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+
+        class ConfettiParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 8 + 2;
+                this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                this.velocityX = Math.random() * 2 - 1;
+                this.velocityY = Math.random() * 3 + 2;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 5 - 2.5;
+            }
+
+            update() {
+                this.y += this.velocityY;
+                this.x += this.velocityX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+                ctx.closePath();
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 150; i++) {
+                particles.push(new ConfettiParticle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((particle) => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        createConfetti();
+        animate();
+    </script>
+<br> (iré agregando recuerdos juntos, aspiro a tener AMERI en un bucle de 10 horas mientras pasas las imagenes)
+<br> <center>teamo
 </body>
-<marquee>
-<h1>
-<n>
-ESPÍRITU EXPLOSIVO
-</n>
-</h1>
-</marquee>
-<center>
-<img src="https://i.pinimg.com/736x/e1/dc/d7/e1dcd78e85ffdf8ed543841ba61f917d.jpg" width="400">
-<br>
-<br>
-<audio controls>
-<source src="alma.mp3">
-<br>
-<br>
-</audio>
 </html>
